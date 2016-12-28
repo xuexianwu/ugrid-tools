@@ -3,11 +3,11 @@ from subprocess import check_output
 
 import numpy as np
 
+from utools import env
 from utools.io.mpi import MPI_RANK, MPI_COMM
 from utools.prep.create_netcdf_data import create_source_netcdf_data, get_exact_field
 from utools.prep.prep_shapefiles import convert_to_esmf_format
 from utools.regrid.core_esmf import create_weights_file, create_weighted_output, validate_weighted_output
-from utools.regrid.core_ocgis import create_linked_shapefile
 from utools.test.base import AbstractUToolsTest, attr
 
 
@@ -52,13 +52,13 @@ class Test(AbstractUToolsTest):
     def test_weighted_output(self):
         path_in_shp = os.path.join(self.path_bin, 'nhd_catchments_texas', 'nhd_catchments_texas.shp')
         name_uid = 'GRIDCODE'
-        esmf_exe_path = 'ESMF_RegridWeightGen'
-        mpirun_exe_path = 'mpirun'
+        esmf_exe_path = env.TEST_ESMF_EXE
+        mpirun_exe_path = env.TEST_MPIRUN_EXE
         variable_name = 'exact'
 
         path_output_data = self.get_temporary_file_path('weighted_esmf_format.nc')
         path_in_esmf_format = self.get_temporary_file_path('test_esmf_weights.nc')
-        path_linked_shp = self.get_temporary_file_path('test_linked.shp')
+        # path_linked_shp = self.get_temporary_file_path('test_linked.shp')
         path_out_weights_nc = self.get_temporary_file_path('output_weights_file.nc')
         path_src = self.get_temporary_file_path('exact.nc')
 
@@ -72,14 +72,14 @@ class Test(AbstractUToolsTest):
         create_weights_file(mpirun_exe_path, esmf_exe_path, path_src, path_in_esmf_format, path_out_weights_nc, n=1)
         create_weighted_output(path_in_esmf_format, path_src, path_out_weights_nc, path_output_data, variable_name)
 
-        create_linked_shapefile(name_uid, variable_name, path_in_shp, path_linked_shp, path_output_data)
+        # create_linked_shapefile(name_uid, variable_name, path_in_shp, path_linked_shp, path_output_data)
 
         max_se = 1e-4
         max_rmse = 1e-4
         with self.nc_scope(path_output_data) as ds:
             exact = ds.variables[variable_name][0, :]
             coords = ds.variables['centerCoords'][:]
-        exact_centers = get_exact_field(coords[:, 1], coords[:, 0])
+        exact_centers = get_exact_field(coords[:, 0], coords[:, 1])
         se = (exact - exact_centers) ** 2
         mse = np.mean(se)
         rmse = np.sqrt(mse)

@@ -16,6 +16,10 @@ class Environment(object):
         self.LOGGING_LEVEL = EnvParm('LOGGING_LEVEL', logbook.INFO)
         self.LOGGING_STDOUT = EnvParm('LOGGING_STDOUT', False, formatter=self._format_bool_)
         self.LOGGING_TOFILE = EnvParm('LOGGING_TOFILE', True, formatter=self._format_bool_)
+        self.TEST_ESMF_EXE = EnvParm('TEST_ESMF_EXE',
+                                     '/home/benkoziol/anaconda2/envs/ugrid-tools/bin/ESMF_RegridWeightGen')
+        self.TEST_MPIRUN_EXE = EnvParm('TEST_MPIRUN_EXE',
+                                       '/home/benkoziol/anaconda2/envs/ugrid-tools/bin/mpirun')
 
         default_gdb = '/home/benkoziol/l/data/nfie/NHDPlusNationalData/NHDPlusV21_National_Seamless.gdb'
         self.TEST_NHD_SEAMLESS_FILE_GDB = EnvParm('TEST_NHD_SEAMLESS_FILE_GDB', default_gdb)

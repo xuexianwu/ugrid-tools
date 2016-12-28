@@ -58,7 +58,7 @@ def create_source_netcdf_data(path, lon, lat, ttime, variable_name='exact', crea
             exact_shape = (len(ttime), lat.shape[0], lon.shape[0])
             vexact = ds.createVariable(variable_name, np.float32, dimensions=('time', 'lat', 'lon'))
             # Use this fill fill approach to avoid memory issues with large grids.
-            for tidx, lon_idx in itertools.product(*[range(ii) for ii in [exact_shape[0], exact_shape[1]]]):
+            for tidx, lon_idx in itertools.product(*[range(ii) for ii in [exact_shape[0], exact_shape[2]]]):
                 exact = get_exact_field(mlon[:, lon_idx], mlat[:, lon_idx])
                 vexact[tidx, :, lon_idx] = exact
     finally:

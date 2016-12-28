@@ -922,8 +922,8 @@ def get_iter(element, dtype=None):
 
 def get_exact_field(lon, lat, to_radians=True, unwrap=True):
     """
-    :param lon_rad: Array of longitude coordinates.
-    :param lat_rad: Array of latitude coordinates.
+    :param lon: Array of longitude coordinates.
+    :param lat: Array of latitude coordinates.
     :param to_radians: If ``True``, convert spherical degrees to radians.
     :param unwrap: If ``True``, unwrap spherical data to the 0 to 360 degree domain.
     :return: An array of exact values calculated from radian coordinates.

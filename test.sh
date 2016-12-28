@@ -2,6 +2,8 @@
 
 
 export UTOOLS_LOGGING_LEVEL=error
+export UTOOLS_TEST_ESMF_EXE=`which ESMF_RegridWeightGen`
+export UTOOLS_TEST_MPIRUN_EXE=`which mpirun`
 
 
 echo '+++ Serial tests +++'
