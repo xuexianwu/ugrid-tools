@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export OUTDIR=/glade/u/home/benkoz/logs/esmf-build
-export SRCDIR_NAME=esmf_dev
+export SRCDIR_NAME=esmf
 export BUILDDIR=`mktemp -d`
 export CPU_COUNT=1
 export SHOULD_GIT_CLONE="false"
