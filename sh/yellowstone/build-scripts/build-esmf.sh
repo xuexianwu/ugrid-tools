@@ -48,3 +48,12 @@ make info 2>&1 | tee "${OUTDIR}/esmf.make.info.`date`.out" && \
  make install 2>&1 | tee "${OUTDIR}/esmf.make.install.`date`.out"
 
 rm -rf ${BUILDDIR}
+
+#module swap intel gnu
+#module load python numpy mpi4py
+#cd ${ESMF_DIR}
+#export WD=`pwd -LP`
+#export ESMFMKFILE=`find ${WD} -name '*esmf.mk'`
+#cd ${ESMF_DIR}/src/addon/ESMPy
+#python setup.py build --ESMFMKFILE=${ESMFMKFILE}
+#python setup.py install
