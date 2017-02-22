@@ -1,7 +1,6 @@
 import os
 from unittest import SkipTest
 
-import fiona
 import numpy as np
 from shapely import wkt
 from shapely.geometry import shape

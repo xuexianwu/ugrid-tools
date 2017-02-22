@@ -40,8 +40,9 @@ if env.LOGGING_ENABLED:
         fh.formatter = formatter
         # fh.format_string += ' (rank={})'.format(MPI_RANK)
         log.handlers.append(fh)
-        log.notice('Initialized (Version {})'.format(utools.__version__))
         # fh.push_application()
+
+    log.notice('Initialized (Version {})'.format(utools.__version__))
 
 
 class log_entry_exit(object):

@@ -5,8 +5,6 @@ sudo: false
 branches:
   except:
     - yellowstone-env
-    - yellowstone-convert-to-esmf
-    - conus-spherical-exact-data
 
 env:
   - CONDA_PYTHON="python=2.7"
@@ -21,27 +19,29 @@ before_install:
   - conda info -a
 
 install:
-  - conda create -n test-with-ocgis -y -c nesii/channel/dev-esmf -c nesii esmpy==HEAD ocgis nose
-  - source activate test-with-ocgis
+  - conda env create -f environment.yml
+  - source activate ugrid-tools
   - conda remove -y ocgis
-  - pip install logbook
-  - git clone -b pmesh-ugrid-nfie https://github.com/NCPP/ocgis.git && cd ocgis && python setup.py install
-  - cd ..
-
-  - conda create -n test-without-ocgis-rtree -y -c nesii/channel/dev-esmf -c nesii esmpy==HEAD ocgis nose
-  - source activate test-without-ocgis-rtree
-  - conda remove -y ocgis rtree
-  - pip install logbook
+  - ( cd /tmp && git clone -b pmesh-ugrid-nfie https://github.com/NCPP/ocgis.git && cd ocgis && python setup.py install )
 
 script:
-  - source activate test-with-ocgis
+  # This runs the full suite of tests.
+  - source activate ugrid-tools
   - bash test.sh
   - python setup.py install
   - python -c "import utools"
   - utools_cli --help
 
-  - source activate test-without-ocgis-rtree
+  # Test OCGIS and RTree are optional Python dependencies.
+  - source activate ugrid-tools
+  - conda remove -y ocgis rtree
   - bash test.sh
   - python setup.py install
   - python -c "import utools"
   - utools_cli --help
+
+  # Test ESMF format conversion can occur without Fiona.
+  - source activate ugrid-tools
+  - conda remove -y fiona
+  - cd src
+  - nosetests utools.test.test_utools.test_prep.test_prep_shapefiles:Test.test_convert_to_esmf_format

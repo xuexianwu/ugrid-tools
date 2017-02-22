@@ -2,7 +2,7 @@
 
 
 #BSUB -W 00:01                                           # wall-clock time (hrs:mins)
-#BSUB -n 8                                               # number of tasks in job
+#BSUB -n 1                                               # number of tasks in job
 #BSUB -J utools                                          # job name
 #BSUB -o test.utools.%J.out                              # output file name
 #BSUB -e test.utools.%J.err                              # error file name
@@ -20,6 +20,8 @@ export ESMF_FORMAT_FILE=${TESTTMPDIR}/test_esmf_format.nc
 
 echo "Test directory: ${TESTTMPDIR}"
 
-mpirun.lsf utools_cli convert -u ${SOURCE_SHP_UID} -s ${SOURCE_SHP} -e ${ESMF_FORMAT_FILE} && \
- echo "SUCCESS - Yellowstone ugrid-tools test" && \
- exit 0
+mpirun.lsf python import_netCDF4.py
+
+#mpirun.lsf utools_cli convert -u ${SOURCE_SHP_UID} -s ${SOURCE_SHP} -e ${ESMF_FORMAT_FILE} && \
+# echo "SUCCESS - Yellowstone ugrid-tools test" && \
+# exit 0

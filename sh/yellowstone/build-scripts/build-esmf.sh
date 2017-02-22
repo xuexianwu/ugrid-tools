@@ -1,15 +1,20 @@
 #!/bin/bash
 
 export OUTDIR=/glade/u/home/benkoz/logs/esmf-build
-export SRCDIR_NAME=esmf
-export BUILDDIR=`mktemp -d`
+#export SRCDIR_NAME=esmf
+#export BUILDDIR=`mktemp -d`
 export CPU_COUNT=1
 export SHOULD_GIT_CLONE="false"
 export SHOULD_GIT_PULL="false"
 
-export PREFIX=/glade/u/home/benkoz/sandbox/${SRCDIR_NAME}
-export ESMF_DIR=${BUILDDIR}/${SRCDIR_NAME}
-export SRCDIR=~/src/${SRCDIR_NAME}
+export PREFIX=/glade/u/home/benkoz/sandbox/esmf-debug
+#export PREFIX=/glade/u/home/benkoz/sandbox/esmf
+#export ESMF_DIR=${BUILDDIR}/${SRCDIR_NAME}
+export ESMF_DIR=~/src/esmf
+#export SRCDIR=~/src/${SRCDIR_NAME}
+export ESMF_COMPILER=intel
+export ESMF_F90COMPILEOPTS="-g"
+export ESMF_CXXCOMPILEOPTS="-g"
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -22,12 +27,13 @@ if [ ${SHOULD_GIT_PULL} == "true" ]; then
     ( cd ~/src/esmf && git pull )
 fi
 
-cp -r ${SRCDIR} ${BUILDDIR}
+#cp -r ${SRCDIR} ${BUILDDIR}
 cd ${ESMF_DIR}
 
 rm -rf ${PREFIX}
 
-module swap intel gnu
+module reset
+#module swap intel gnu
 
 export ESMF_INSTALL_PREFIX=${PREFIX}
 export ESMF_INSTALL_BINDIR=${PREFIX}/bin
@@ -41,13 +47,14 @@ export ESMF_COMM=mpich2
 #export ESMF_NETCDF_LIBPATH=${PREFIX}/lib
 
 #make clean && \
-make info 2>&1 | tee "${OUTDIR}/esmf.make.info.`date`.out" && \
+make distclean 2>&1 | tee "${OUTDIR}/esmf.make.distclean.`date`.out" && \
+ make info 2>&1 | tee "${OUTDIR}/esmf.make.info.`date`.out" && \
  make -j ${CPU_COUNT} 2>&1 | tee "${OUTDIR}/esmf.make.`date`.out" && \
 # make check
 # make all_tests | tee ~/esmf_all_tests.out
  make install 2>&1 | tee "${OUTDIR}/esmf.make.install.`date`.out"
 
-rm -rf ${BUILDDIR}
+#rm -rf ${BUILDDIR}
 
 #module swap intel gnu
 #module load python numpy mpi4py

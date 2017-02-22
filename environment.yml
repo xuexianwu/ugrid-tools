@@ -1,0 +1,16 @@
+name: ugrid-tools
+channels:
+- nesii/channel/dev-esmf
+- nesii
+dependencies:
+- gdal
+- mpi4py
+- netcdf4
+- nose
+- python=2.7
+- shapely
+- fiona
+- ocgis
+- esmpy=HEAD
+- pip:
+  - logbook

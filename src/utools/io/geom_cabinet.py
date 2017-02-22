@@ -2,7 +2,6 @@ import os
 from collections import OrderedDict
 from copy import deepcopy
 
-import fiona
 import ogr
 from shapely import wkb
 
@@ -31,9 +30,15 @@ class GeomCabinet(object):
         return ret
 
     def get_meta(self, key=None, path=None):
-        path = path or self.get_shp_path(key)
-        with fiona.open(path, 'r') as source:
-            return source.meta
+        try:
+            import fiona
+        except ImportError:
+            # TODO: Implement a Fiona-like meta function using only the GDAL Python bindings.
+            return {}
+        else:
+            path = path or self.get_shp_path(key)
+            with fiona.open(path, 'r') as source:
+                return source.meta
 
     def get_shp_path(self, key):
         return self._get_path_(key, ext='shp')

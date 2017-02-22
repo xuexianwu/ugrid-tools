@@ -2,9 +2,7 @@ import os
 from contextlib import contextmanager
 from datetime import datetime
 
-import fiona
 import netCDF4 as nc
-from fiona.crs import from_epsg
 from shapely.geometry import mapping
 
 
@@ -94,6 +92,8 @@ def write_fiona(target, filename_no_suffix, folder='~/htmp', crs=None):
     :param folder: Directory to write to.
     :param crs: The coordinate system of the geometry objects.
     """
+    import fiona
+    from fiona.crs import from_epsg
 
     schema = {'geometry': 'MultiPolygon', 'properties': {}}
     with fiona.open(os.path.expanduser(os.path.join(folder, '{}.shp'.format(filename_no_suffix))), mode='w',

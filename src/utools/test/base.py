@@ -15,6 +15,12 @@ from utools.constants import UgridToolsConstants
 from utools.helpers import nc_scope
 from utools.logging import log
 
+"""
+Test attributes:
+
+ * mpi :: Tests that run in parallel.
+"""
+
 
 class AbstractUToolsTest(TestCase):
     key = UgridToolsConstants.PROJECT_PREFIX

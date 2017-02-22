@@ -1,3 +1,6 @@
+import os
+
+from utools import env
 from utools.logging import log
 from utools.test.base import AbstractUToolsTest, attr
 

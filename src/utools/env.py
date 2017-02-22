@@ -15,7 +15,7 @@ class Environment(object):
         self.LOGGING_FILE_PREFIX = EnvParm('LOGGING_FILE_PREFIX', UgridToolsConstants.PROJECT_PREFIX)
         self.LOGGING_LEVEL = EnvParm('LOGGING_LEVEL', logbook.INFO)
         self.LOGGING_STDOUT = EnvParm('LOGGING_STDOUT', False, formatter=self._format_bool_)
-        self.LOGGING_TOFILE = EnvParm('LOGGING_TOFILE', True, formatter=self._format_bool_)
+        self.LOGGING_TOFILE = EnvParm('LOGGING_TOFILE', False, formatter=self._format_bool_)
         self.TEST_ESMF_EXE = EnvParm('TEST_ESMF_EXE',
                                      '/home/benkoziol/anaconda2/envs/ugrid-tools/bin/ESMF_RegridWeightGen')
         self.TEST_MPIRUN_EXE = EnvParm('TEST_MPIRUN_EXE',

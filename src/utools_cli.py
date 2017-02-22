@@ -2,13 +2,17 @@
 
 import os
 from ConfigParser import SafeConfigParser
+import numpy as np
 
 import click
 import osgeo
 
-from utools.constants import UgridToolsConstants
+from utools import UgridToolsConstants
 from utools.logging import log_entry, log
 
+# HACK: On Yellowstone, we need to import numpy here. There is something about the CLI invoker that causes path issues.
+#       Importing before it is invoked allows everything to link nicely.
+assert np is not None
 
 @click.group()
 def utools_cli():

@@ -2,11 +2,10 @@
 
 # Check for required environment variables.
 [ -z "${J}" ] && echo "Need to set J (the job name)" && exit 1
-source ${UTOOLS_SRC}/sh/yellowstone/jobs/run-env.sh
 [ -z "${YELLOWSTONE_PROJECT}" ] && echo "Need to set YELLOWSTONE_PROJECT" && exit 1
 
 # Set additional environment variables dependent on the required environment variables.
-source ${UTOOLS_SRC}/sh/yellowstone/jobs/run-env.sh
+source run-env.sh
 
 # Create the logging directories.
 if [ -d ${LOG_DIR} ]; then

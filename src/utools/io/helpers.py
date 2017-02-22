@@ -1,7 +1,6 @@
 import itertools
 from collections import deque, OrderedDict
 
-import fiona
 import netCDF4 as nc
 import numpy as np
 from numpy.ma import MaskedArray
@@ -25,6 +24,7 @@ def convert_multipart_to_singlepart(path_in, path_out, new_uid_name=UgridToolsCo
     :param str new_uid_name: Use this name as the default for the new unique identifier.
     :param int start: Start value for the new unique identifier.
     """
+    import fiona
 
     with fiona.open(path_in) as source:
         len_source = len(source)
@@ -322,6 +322,8 @@ def get_mapped_face_links(face_ids, face_links):
 
 def flexible_mesh_to_fiona(out_path, face_nodes, node_x, node_y, crs=None, driver='ESRI Shapefile',
                            indices_to_load=None, face_uid=None):
+    import fiona
+
     if face_uid is None:
         properties = {}
     else:
