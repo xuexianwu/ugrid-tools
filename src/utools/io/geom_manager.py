@@ -5,6 +5,8 @@ from osgeo import ogr, osr
 from shapely.geometry import shape
 from shapely.geometry.base import BaseMultipartGeometry
 
+from utools.exc import NoInteriorsError
+from utools.helpers import GeometrySplitter
 from utools.io.geom_cabinet import GeomCabinetIterator, GeomCabinet
 from utools.io.helpers import get_node_count, get_split_polygon_by_node_threshold
 
@@ -19,7 +21,7 @@ class GeometryManager(object):
     """
 
     def __init__(self, name_uid, path=None, records=None, path_rtree=None, allow_multipart=False, node_threshold=None,
-                 dest_crs=None, driver_kwargs=None, slc=None):
+                 dest_crs=None, driver_kwargs=None, slc=None, split_interiors=False):
         if path_rtree is not None:
             assert os.path.exists(path_rtree + '.idx')
 
@@ -32,6 +34,7 @@ class GeometryManager(object):
         self.dest_crs = dest_crs
         self.driver_kwargs = driver_kwargs
         self.slc = slc
+        self.split_interiors = split_interiors
 
         self._has_provided_records = False if records is None else True
 
@@ -69,6 +72,13 @@ class GeometryManager(object):
                 # Only use the geometry objects from here. Maintaining the list of coordinates is superfluous.
                 record.pop('geometry')
             self._validate_record_(record)
+
+            # Split interiors if the current record has them. Only applicable for polygons.
+            if self.split_interiors:
+                try:
+                    record['geom'] = GeometrySplitter(record['geom']).split()
+                except NoInteriorsError:
+                    pass
 
             # Modify the geometry if a node threshold is provided. This breaks the polygon object into pieces with the
             # approximate node count.

@@ -53,3 +53,11 @@ class TestGeomManager(AbstractUToolsTest):
             if ctr > 10:
                 break
             self.assertIsInstance(row['geom'], (Polygon, MultiPolygon))
+
+    def test_iter_records(self):
+        # Test interior splitting is performed if requested.
+        records = [{'geom': self.polygon_with_hole, 'properties': {'GRIDCODE': 81}}]
+        gm = GeometryManager('GRIDCODE', records=records, allow_multipart=True, split_interiors=True)
+        records = list(gm.iter_records())
+        self.assertEqual(len(records), 1)
+        self.assertEqual(len(records[0]['geom']), 4)

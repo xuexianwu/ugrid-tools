@@ -38,9 +38,12 @@ def utools_cli():
 @click.option('-n', '--node-threshold', type=int, default=UgridToolsConstants.NODE_THRESHOLD,
               help='(default={}) Approximate limit on the number of nodes in an element part. The default node '
                    'threshold provides significant performance improvement.'.format(UgridToolsConstants.NODE_THRESHOLD))
+@click.option('--split/--no-split', required=False, default=True,
+              help='If "--split" (enabled by default), any polygon with holes or interiors will be split such that '
+                   'each polygon part has no holes/interiors.')
 @click.option('--debug/--no-debug', required=False, default=False,
               help='If "--debug", execute in debug mode converting only the first record of the geometry container.')
-def convert(source_uid, source, esmf_format, feature_class, config_path, dest_crs_index, node_threshold, debug):
+def convert(source_uid, source, esmf_format, feature_class, config_path, dest_crs_index, node_threshold, split, debug):
     from utools.prep.prep_shapefiles import convert_to_esmf_format
 
     log_entry('info', 'Started converting to ESMF format: {}'.format(source), rank=0)
@@ -69,7 +72,7 @@ def convert(source_uid, source, esmf_format, feature_class, config_path, dest_cr
         dest_crs = None
 
     convert_to_esmf_format(esmf_format, source, source_uid, node_threshold=node_threshold, driver_kwargs=driver_kwargs,
-                           debug=debug, dest_crs=dest_crs)
+                           debug=debug, dest_crs=dest_crs, split_interiors=split)
     log_entry('info', 'Finished converting to ESMF format: {}'.format(source), rank=0)
 
 

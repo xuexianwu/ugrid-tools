@@ -9,6 +9,8 @@ from unittest import TestCase
 import netCDF4 as nc
 import numpy as np
 from logbook import DEBUG
+from shapely.geometry import Polygon
+from shapely.geometry import box
 
 from utools import env
 from utools.constants import UgridToolsConstants
@@ -38,6 +40,18 @@ class AbstractUToolsTest(TestCase):
     @property
     def path_nhd_seamless_file_geodatabase(self):
         return env.TEST_NHD_SEAMLESS_FILE_GDB
+
+    @property
+    def polygon_with_hole(self):
+        outer_box = box(2.0, 10.0, 4.0, 20.0)
+        inner_box = box(2.5, 10.5, 3.5, 15.5)
+
+        outer_coords = list(outer_box.exterior.coords)
+        inner_coords = [list(inner_box.exterior.coords)]
+
+        with_interior = Polygon(outer_coords, holes=inner_coords)
+
+        return with_interior
 
     def assertNcEqual(self, uri_src, uri_dest, check_types=True, close=False, metadata_only=False,
                       ignore_attributes=None, ignore_variables=None):

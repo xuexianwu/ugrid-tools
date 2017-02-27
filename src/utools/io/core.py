@@ -7,7 +7,8 @@ def from_geometry_manager(gm, mesh_name='mesh', use_ragged_arrays=False, with_co
 
 
 def from_shapefile(path, name_uid, mesh_name='mesh', path_rtree=None, use_ragged_arrays=False, with_connectivity=True,
-                   allow_multipart=False, node_threshold=None, driver_kwargs=None, debug=False, dest_crs=None):
+                   allow_multipart=False, node_threshold=None, driver_kwargs=None, debug=False, dest_crs=None,
+                   split_interiors=True):
     """
     Create a flexible mesh from a target shapefile.
 
@@ -38,7 +39,8 @@ def from_shapefile(path, name_uid, mesh_name='mesh', path_rtree=None, use_ragged
     log.debug('creating geometry manager')
     log.debug(('driver_kwargs', driver_kwargs))
     gm = GeometryManager(name_uid, path=path, path_rtree=path_rtree, allow_multipart=allow_multipart,
-                         node_threshold=node_threshold, slc=slc, driver_kwargs=driver_kwargs, dest_crs=dest_crs)
+                         node_threshold=node_threshold, slc=slc, driver_kwargs=driver_kwargs, dest_crs=dest_crs,
+                         split_interiors=split_interiors)
     log.debug('geometry manager created')
 
     ret = get_flexible_mesh(gm, mesh_name, use_ragged_arrays, with_connectivity=with_connectivity)

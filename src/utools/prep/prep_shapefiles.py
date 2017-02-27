@@ -21,13 +21,13 @@ def convert_to_singlepart():
 
 @log_entry_exit
 def convert_to_esmf_format(path_out_nc, path_in_shp, name_uid, node_threshold=None, debug=False, driver_kwargs=None,
-                           dest_crs=None, with_connectivity=False, dataset_kwargs=None):
+                           dest_crs=None, with_connectivity=False, dataset_kwargs=None, split_interiors=True):
     polygon_break_value = UgridToolsConstants.POLYGON_BREAK_VALUE
 
     log.debug('loading flexible mesh')
     coll = from_shapefile(path_in_shp, name_uid, use_ragged_arrays=True, with_connectivity=with_connectivity,
                           allow_multipart=True, node_threshold=node_threshold, debug=debug,
-                          driver_kwargs=driver_kwargs, dest_crs=dest_crs)
+                          driver_kwargs=driver_kwargs, dest_crs=dest_crs, split_interiors=split_interiors)
     log.debug('writing flexible mesh')
     convert_collection_to_esmf_format(coll, path_out_nc, polygon_break_value=polygon_break_value,
                                       face_uid_name=name_uid, dataset_kwargs=dataset_kwargs)

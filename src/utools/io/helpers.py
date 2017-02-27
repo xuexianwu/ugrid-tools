@@ -705,6 +705,10 @@ def get_split_polygons(geom, split_shape):
     rows = np.linspace(miny, maxy, split_shape[0])
     cols = np.linspace(minx, maxx, split_shape[1])
 
+    return get_split_polygons_from_meshgrid_vectors(cols, rows)
+
+
+def get_split_polygons_from_meshgrid_vectors(cols, rows):
     cols, rows = np.meshgrid(cols, rows)
 
     cols_corners = get_extrapolated_corners_esmf(cols)

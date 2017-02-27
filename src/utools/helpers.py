@@ -3,7 +3,90 @@ from contextlib import contextmanager
 from datetime import datetime
 
 import netCDF4 as nc
+from shapely.geometry import Polygon
+from shapely.geometry import box
 from shapely.geometry import mapping
+from shapely.geometry.multipolygon import MultiPolygon
+
+from utools.base import AbstractUToolsObject
+from utools.exc import NoInteriorsError
+
+
+class GeometrySplitter(AbstractUToolsObject):
+    _buffer_split = 1e-6
+
+    def __init__(self, geometry):
+        self.geometry = geometry
+
+        if self.interior_count == 0:
+            raise NoInteriorsError
+
+    @property
+    def interior_count(self):
+        try:
+            ret = len(self.geometry.interiors)
+        except AttributeError:
+            ret = 0
+            for g in self.geometry:
+                ret += len(g.interiors)
+        return ret
+
+    def create_split_vector_dict(self, interior):
+        minx, miny, maxx, maxy = self.geometry.buffer(self._buffer_split).bounds
+        col_key = 'cols'
+        row_key = 'rows'
+        ret = {}
+
+        icx, icy = interior.centroid.x, interior.centroid.y
+
+        ret[col_key] = (minx, icx, maxx)
+        ret[row_key] = (miny, icy, maxy)
+
+        return ret
+
+    def create_split_polygons(self, interior):
+        split_dict = self.create_split_vector_dict(interior)
+        cols = split_dict['cols']
+        rows = split_dict['rows']
+
+        ul = box(cols[0], rows[0], cols[1], rows[1])
+        ur = box(cols[1], rows[0], cols[2], rows[1])
+        lr = box(cols[1], rows[1], cols[2], rows[2])
+        ll = box(cols[0], rows[1], cols[1], rows[2])
+
+        return ul, ur, lr, ll
+
+    def split(self, is_recursing=False):
+        geometry = self.geometry
+        if is_recursing:
+            assert isinstance(geometry, Polygon)
+            ret = []
+            for interior in self.iter_interiors():
+                split_polygon = self.create_split_polygons(interior)
+                for sp in split_polygon:
+                    ret.append(geometry.intersection(sp))
+        else:
+            if isinstance(geometry, MultiPolygon):
+                itr = geometry
+            else:
+                itr = [geometry]
+
+            ret = []
+            for geometry_part in itr:
+                try:
+                    geometry_part_splitter = self.__class__(geometry_part)
+                except NoInteriorsError:
+                    ret.append(geometry_part)
+                else:
+                    split = geometry_part_splitter.split(is_recursing=True)
+                    for element in split:
+                        ret.append(element)
+
+        return MultiPolygon(ret)
+
+    def iter_interiors(self):
+        for interior in self.geometry.interiors:
+            yield interior
 
 
 def get_datetime_fp_string():
