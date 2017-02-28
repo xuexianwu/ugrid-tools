@@ -33,6 +33,6 @@ UTOOLS_CLI=utools_cli
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-mpirun.lsf python ${UTOOLS_CLI} convert -u ${UTOOLS_SRC_UID} -s ${UTOOLS_GDB_PATH} \
+mpirun.lsf ${UTOOLS_CLI} convert -u ${UTOOLS_SRC_UID} -s ${UTOOLS_GDB_PATH} \
     -e ${UTOOLS_OUTPUT_FILE} --feature-class ${UTOOLS_FEATURE_CLASS} --config-path ${UTOOLS_CFG_PATH} \
     --dest_crs_index=${UTOOLS_DEST_CRS_INDEX} ${UTOOLS_DEBUG}
