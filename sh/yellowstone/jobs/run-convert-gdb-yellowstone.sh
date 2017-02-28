@@ -2,10 +2,10 @@
 
 
 #BSUB -B
-#BSUB -n 64
+#BSUB -n 40
 #BSUB -W 00:30
-#BSUB -q "regular"
-#BSUB -R "span[ptile=16]"
+#BSUB -q "geyser"
+#BSUB -R "span[ptile=40]"
 #BSUB -J convert-seamless-split-interiors
 #BSUB -o "utools.%J.out"
 #BSUB -e "utools.%J.out"
