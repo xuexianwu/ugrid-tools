@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+
+#BSUB -n 16
+#BSUB -W 00:01
+#BSUB -q "regular"
+#BSUB -R "span[ptile=16]"
+#BSUB -J osgeo-import-test
+#BSUB -o "osgeo-import-test.%J.out"
+#BSUB -e "osgeo-import-test.%J.out"
+#BSUB -P P35071400
+
+source /glade/u/home/benkoz/src/ugrid-tools/sh/yellowstone/utools-env.sh
+
+cd /glade/u/home/benkoz/src/ugrid-tools/sh/reproducers/osgeo-import-yellowstone-regular
+mpirun.lsf python import_osgeo.py
